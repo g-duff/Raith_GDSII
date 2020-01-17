@@ -2,27 +2,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class polygon:
-    def __init__(layer,uv,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv - polygon vertices; 2 x n matrix [u;v] (um)
-        DF - dose factor for polygon''''
+        DF - dose factor for polygon'''
         self.layer = layer
         self.uv = uv
         self.DF = DF
 
 class dot:
-    def __init__(layer,uv,DF):
-    ''' layer - GDSII layer for element (0-63)
-            uv - dot position(s); 2 x n matrix [u;v] (um)
-            DF - dose factor(s) for dot(s); if scalar, DF is applied to all
-                dots specified by uv; if vector, must be of same length as uv'''
+    def __init__(self, layer,uv,DF):
+        ''' layer - GDSII layer for element (0-63)
+        uv - dot position(s); 2 x n matrix [u;v] (um)
+        DF - dose factor(s) for dot(s); if scalar, DF is applied to all
+        dots specified by uv; if vector, must be of same length as uv'''
         self.layer = layer
         self.uv = uv
         self.DF = DF
 
 class path:
-    def __init__(layer,uv,w,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv,w,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv - path vertices; 2 x n matrix [u;v] (um)
         w - width of path (um); value of zero yields single-pixel line; a
             negative value denotes an absolute width (not affected by
@@ -34,8 +34,8 @@ class path:
         self.DF = DF
 
 class arc:
-    def __init__(layer,uv_c,r,theta,angle,w,N,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv_c,r,theta,angle,w,N,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv_c - arc centre; 1 x 2 vector [u_c v_c] (um)
         r - radius of arc; may be scalar for a circular arc, or a 1 x 2
             vector, [semi-major semi-minor] axes of an elliptical arc (um)
@@ -59,8 +59,8 @@ class arc:
         self.DF = DF
 
 class circle:
-    def __init__(layer,uv_c,r,w,N,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv_c,r,w,N,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv_c - circle centre; 1 x 2 vector [u_c v_c] (um)
         r - radius of circle (um)
         w - width of circle (um); if empty, circle is filled (disk); if
@@ -77,8 +77,8 @@ class circle:
         self.DF = DF
 
 class ellipse:
-    def __init__(layer,uv_c,r,w,angle,N,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv_c,r,w,angle,N,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv_c - ellipse centre; 1 x 2 vector [u_c v_c] (um)
         r - 1 x 2 vector, [semi-major semi-minor] axes of ellipse (um)
         w - width of ellipse (um); if empty, ellipse is filled (elliptical
@@ -97,8 +97,8 @@ class ellipse:
         self.DF = DF
 
 class text:
-    def __init__(layer,uv_0,h,angle,uv_align,textlabel,DF):
-    ''' layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv_0,h,angle,uv_align,textlabel,DF):
+        ''' layer - GDSII layer for element (0-63)
         uv_0 - text anchor point [u_0 v_0] (um)
         h - height of capital letters (um)
         angle - angle of rotation of text w.r.t. positive u-axis (degrees)
@@ -118,8 +118,8 @@ class text:
         self.DF = DF
 
 class fbmspath:
-    def __init__(layer,uv,cvtr,w,DF):
-    '''layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv,cvtr,w,DF):
+        '''layer - GDSII layer for element (0-63)
        uv - path vertices; 2 x n matrix [u;v] (um)
        cvtr - curvature of path segments (um); if scalar and zero, the path
            comprises line segments (no curvature); if a 1 x n vector,
@@ -139,8 +139,8 @@ class fbmspath:
         self.DF = DF
 
 class fbmscircle:
-    def __init__(layer,uv_c,r,w,DF):
-    '''  layer - GDSII layer for element (0-63)
+    def __init__(self, layer,uv_c,r,w,DF):
+        '''  layer - GDSII layer for element (0-63)
         uv_c - circle centre; 1 x 2 vector [u_c v_c] (um)
         r - radius of circle (um)
         w - width of circle (um); if zero, circle is a single-pixel line
@@ -154,8 +154,8 @@ class fbmscircle:
         self.DF = DF
 
 class sref:
-    def __init__(name,uv_0,mag=1,angle=0,reflect=0):
-    ''' N.B.!  Transformations are applied in the following order: 1. scaling,
+    def __init__(self, name,uv_0,mag=1,angle=0,reflect=0):
+        ''' N.B.!  Transformations are applied in the following order: 1. scaling,
         mirroring; 2. rotation; 3. insertion.
             name - name of structure being referenced (string)
             uv_0 - structure origin; 1 x 2 vector [u_0 v_0] (um)
@@ -173,13 +173,13 @@ class sref:
         self.reflect = reflect
 
 class aref:
-    def __init__(name,uv_0,n_colrow,a_colrow,mag=1,angle=0,reflect=0):
-    ''' N.B.!  Raith interprets aref objects differently than the GDSII
-    specification (e.g., as displayed using KLayout).  Given the number and
-    spacing of rows and columns, a lattice of instance origins is
-    generated, then rotation is applied to this lattice (if specified).  At
-    each of these lattice points, a structure is placed, after first being
-    scaled and/or rotated.
+    def __init__(self, name,uv_0,n_colrow,a_colrow,mag=1,angle=0,reflect=0):
+        ''' N.B.!  Raith interprets aref objects differently than the GDSII
+        specification (e.g., as displayed using KLayout).  Given the number and
+        spacing of rows and columns, a lattice of instance origins is
+        generated, then rotation is applied to this lattice (if specified).  At
+        each of these lattice points, a structure is placed, after first being
+        scaled and/or rotated.
         name - name of structure being referenced (string)
         uv_0 - structure origin; 1 x 2 vector [u_0 v_0] (um)
         n_colrow - 1 x 2 vector indicating number of columns and rows,
